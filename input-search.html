@@ -1,0 +1,105 @@
+<dom-module id="input-search">
+
+    <template>
+        <style>
+            :host {
+                padding: 5px;
+                display: flex;
+                --min-size: 48px;
+                margin-top: 10px;
+                justify-content: center;
+            }
+
+            input {
+                flex-grow: 1;
+                min-height: var(--min-size);
+                outline: none;
+                border: 0px;
+                border-bottom: 1px solid #ffffff;
+                padding: 0px 5px;
+                font-size: 15px;
+                max-width: 400px;
+                display: flex;
+                align-items: flex-end;
+                color: #ffffff;
+                background-color: transparent;
+            }
+
+            input:invalid {
+                border: 1px solid red;
+            }
+
+            button {
+                margin-left: 5px;
+                min-width: var(--min-size);
+                min-height: var(--min-size);
+                color: #ffffff;
+                border-radius: 10px;
+                outline: none;
+                border: none;
+                padding: 5px;
+                background-color: #B53471;
+                cursor: pointer;
+                font-size: 15px;
+            }
+        </style>
+        <input type="text" placeholder="[[placeholder]]" value="[[value]]" pattern="[[regExp]]" required>
+        <button on-click="sendValue">[[buttonName]]</button>
+    </template>
+
+    <script>
+        class inputSearch extends Polymer.Element {
+
+            static get is() {
+                return "input-search";
+            }
+            static get properties() {
+                return {
+                    placeholder: String,
+                    buttonName: String,
+                    regExp: String,
+                    value: String
+                }
+            }
+
+            ready() {
+                super.ready();
+                let inputEl = this.shadowRoot.querySelector('input');
+                inputEl.addEventListener('keyup', this.validateInputValue.bind(this));
+                this.shadowRoot.addEventListener('keyup', this.enterKeySearch.bind(this));
+            }
+
+            enterKeySearch(event) {
+                if (event.keyCode === 13) {
+                    let buttonEl = this.shadowRoot.querySelector('button');
+                    buttonEl.click();
+                }
+            }
+
+            validateInputValue(e) {
+                let chekedValidity = e.currentTarget.checkValidity();
+                this.toggleButton(chekedValidity ? true : false);
+            }
+
+            toggleButton(status) {
+                let buttonEl = this.shadowRoot.querySelector('button');
+                buttonEl.disabled = !status;
+            }
+
+            sendValue() {
+                let inputValue = this.shadowRoot.querySelector('input').value;
+                let event = new CustomEvent('button-clicked', {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                        value: inputValue
+                    }
+                });
+                this.dispatchEvent(event);
+            }
+        }
+
+        customElements.define(inputSearch.is, inputSearch);
+    </script>
+
+</dom-module>

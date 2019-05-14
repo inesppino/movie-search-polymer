@@ -1,0 +1,83 @@
+<!-- <link rel="import" href="node_modules/@polymer/polymer/polymer-element.html"> -->
+<link rel="import" href="https://cdn.rawgit.com/Download/polymer-cdn/master/lib/iron-ajax/iron-ajax.html">
+<!-- <link rel="import" href="node_modules/@polymer/polymer/lib/elements/dom-repeat.html "> -->
+
+<dom-module id="ajax-call">
+    <template>
+        <style>
+            :host {
+                display: block;
+                padding: 5px;
+            }
+
+            h3{
+                margin: 10px;
+            }
+
+            ul{
+                list-style: none;
+                margin: 0px;
+                padding: 10px;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, 250px);
+                grid-gap: 10px;
+                justify-items: stretch;
+                justify-content: center;
+            }
+
+            li{
+                display: flex;
+                flex-direction: column;
+                border: 1px solid  #ffffff;
+                border-radius: 5%;
+                align-items: center;
+                padding: 5px;
+            }
+
+            li:hover{
+                border: 1px solid  #B53471;
+                background-color:rgba(0, 0, 0, 0.863);
+            }
+
+            img{
+                width:230px;
+                height: 350px;
+                border-radius: 5%;
+            }
+            
+            h4{
+                margin: 0px;
+                padding: 5px;
+            }
+        </style>
+        <h3>Resultados:</h3>
+        <iron-ajax 
+            auto 
+            url="https://www.omdbapi.com/?s=[[querySearch]]&plot=full&apikey=e477ed6a" 
+            handle-as="json"
+            last-response="{{response}}">
+        </iron-ajax>
+        <ul>
+            <template is="dom-repeat" items="[[response.Search]]">
+                <li id="[[item.imdbID]]"><h4>[[item.Title]]</h4><span>[[item.Year]]</span> <img src="[[item.Poster]]" alt="[[item.Title]]">
+                </li>
+            </template>
+    </ul>
+    </template>
+
+    <script>
+        class ajaxCall extends Polymer.Element {
+            static get is() {
+                return "ajax-call";
+            }
+            static get properties() {
+                return {
+
+                }
+            }
+        }
+        customElements.define(ajaxCall.is, ajaxCall);
+    </script>
+</dom-module>
+
+<!-- on-response="handleResponse " -->

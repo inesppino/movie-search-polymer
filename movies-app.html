@@ -1,0 +1,43 @@
+<link rel="import" href="input-search.html">
+<link rel="import" href="ajax-call.html">
+
+<dom-module id="movies-app">
+
+    <template>
+        <style>
+            :host {
+                display: block;
+                padding: 5px;
+            }
+        </style>
+        <slot></slot>
+        <input-search placeholder="Escribe para empezar a buscar" value="Inception" button-name="Buscar" reg-exp="(^[A-Za-z0-9][ \S]*)"></input-search>
+        <ajax-call query-search="{{query}}"></ajax-call>
+    </template>
+
+    <script>
+        class MoviesApp extends Polymer.Element {
+
+            static get is() {
+                return "movies-app";
+            }
+            static get properties() {
+                return {
+                    query: String
+                }
+            }
+
+            ready() {
+                super.ready();
+                const childElement = this.shadowRoot.querySelector('input-search');
+                childElement.addEventListener('button-clicked', (event) => {
+                    this.query = event.detail.value;
+                });
+            }
+
+
+        }
+        customElements.define(MoviesApp.is, MoviesApp);
+    </script>
+
+</dom-module>
